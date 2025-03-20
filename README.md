@@ -15,7 +15,6 @@ A 2D space shooter game built with SFML, demonstrating Object-Oriented Programmi
   <li>Sound and effects using SFML’s Audio module</li>
 </ul>
 
-<br>
 
 ## Proposed Structure
 ```
@@ -45,7 +44,5 @@ SFML-Space-Defender
 │   ├── spaceship.png
 │   ├── enemy.png
 │   ├── laser.wav
-└── CMakeLists.txt              # CMake build configuration
-└── README.md                   # Project description & setup instructions
-└── .gitignore                   # Ignore build files
-```
+└── CMakeLists.txt             
+└── README.md                   
