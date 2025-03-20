@@ -4,7 +4,6 @@ A 2D space shooter game built with SFML, demonstrating Object-Oriented Programmi
 </em>
 
 <br>
-<br>
 
 ## Game Features
 <ul>
@@ -16,7 +15,6 @@ A 2D space shooter game built with SFML, demonstrating Object-Oriented Programmi
   <li>Sound and effects using SFML’s Audio module</li>
 </ul>
 
-<br>
 <br>
 
 ## Proposed Structure
