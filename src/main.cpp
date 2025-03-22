@@ -1,8 +1,9 @@
 #include <SFML/Graphics.hpp>
-
+#include <SFML/System/Clock.hpp>
+#include <iostream>
 int main()
 {
-    auto window = sf::RenderWindow(sf::VideoMode({800u, 600u}), "Space Defender");
+    auto window = sf::RenderWindow(sf::VideoMode({1200u, 1000u}), "Space Defender");
     window.setFramerateLimit(144);
 
     sf::CircleShape shape;
@@ -12,32 +13,39 @@ int main()
     shape.setFillColor(sf::Color::Green);
     shape.setPosition({375, 275}); 
     
+    sf::Clock clock;
+    std::cout << "Starting Space Defender v-1" << std::endl;
     while (window.isOpen())
     {
-        // check all the window's events that were triggered since the last iteration of the loop
+        float deltaTime = clock.restart().asSeconds();
+
         while (const std::optional event = window.pollEvent())
         {
-            // "close requested" event: we close the window
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
 
+        sf::Vector2f movement;
+        const float speed = 300.0f * deltaTime;
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
         {
-            shape.move({-1.f, 0.f});
+            movement.x -= speed;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
         {
-            shape.move({1.f, 0.f});
+            movement.x += speed;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
         {
-            shape.move({0.f, -1.f});
+            movement.y -= speed;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
         {
-            shape.move({0.f, 1.f});
+            movement.y += speed;
         }
+
+        shape.move(movement);
 
         window.clear();
         window.draw(shape);
