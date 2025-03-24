@@ -12,13 +12,14 @@ Player::Player() {
 void Player::update(float deltaTime) {
     sf::Vector2f movement;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+    // use WASD to prevent key ghosting
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
         movement.x -= speed * deltaTime;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
         movement.x += speed * deltaTime;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
         movement.y -= speed * deltaTime;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         movement.y += speed * deltaTime;
 
     shape.move(movement);
