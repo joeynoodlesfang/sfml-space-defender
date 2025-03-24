@@ -8,6 +8,7 @@ public:
 
     void update(float deltaTime);
     void draw(sf::RenderWindow& window);
+    sf::Vector2f getPosition(void);
 
 private:
     sf::CircleShape shape;

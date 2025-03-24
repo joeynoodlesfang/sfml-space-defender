@@ -17,6 +17,7 @@ include_directories(include)
 add_executable(SpaceDefender 
     src/main.cpp
     src/Player.cpp
+    src/Bullet.cpp
 )
 target_compile_features(SpaceDefender PRIVATE cxx_std_17)
 target_link_libraries(SpaceDefender PRIVATE SFML::Graphics)

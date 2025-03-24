@@ -27,3 +27,7 @@ void Player::update(float deltaTime) {
 void Player::draw(sf::RenderWindow& window) {
     window.draw(shape);
 }
+
+sf::Vector2f Player::getPosition(void) {
+    return shape.getPosition();
+}
