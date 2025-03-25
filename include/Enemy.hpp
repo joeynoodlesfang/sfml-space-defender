@@ -4,8 +4,10 @@
 class Enemy {
 public:
     Enemy(const sf::Vector2f& position);
-    void update(float deltaTime) const;
+    
+    void update(float deltaTime);
     void draw(sf::RenderWindow& window) const;
 private:
     sf::RectangleShape shape;
+    float speed = 100.0f;
 };
