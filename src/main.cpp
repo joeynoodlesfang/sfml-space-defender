@@ -7,6 +7,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "Enemy.hpp"
+
 int main()
 {
     auto window = sf::RenderWindow(sf::VideoMode({1200u, 1000u}), "Space Defender");
