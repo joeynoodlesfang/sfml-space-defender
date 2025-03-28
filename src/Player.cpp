@@ -1,5 +1,7 @@
 #include "Player.hpp"
 
+// TODO: set player edge boundaries
+
 Player::Player() {
     shape.setRadius(50);
     shape.setFillColor(sf::Color::Green);

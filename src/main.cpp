@@ -55,24 +55,29 @@ int main()
         // Handle enemy spawn
         if (enemySpawnClock.getElapsedTime().asSeconds() > enemySpawnInterval) {
             float x = static_cast<float>(std::rand() % static_cast<int>(screenWidth - 40)) + 20.f;
-            enemies.emplace_back(sf::Vector2f(x, 40.f));
+            enemies.emplace_back(sf::Vector2f(x, -40.f));
             enemySpawnClock.restart();
         }
 
         // Updates
         player.update(deltaTime);
+        
         for (size_t i = 0; i < bullets.size(); i++) {
             bullets[i].update(deltaTime);
         }
-        // for (size_t i = 0; i < bullets.size(); i++) {
-        //     enemies[i].update(deltaTime);
-        // }
-        auto newEnd = std::remove_if(bullets.begin(), bullets.end(),
+        auto bulletNewEnd = std::remove_if(bullets.begin(), bullets.end(),
         [](const Bullet& b) {
             return b.isOffScreen();
         });
+        bullets.erase(bulletNewEnd, bullets.end());
 
-        bullets.erase(newEnd, bullets.end());
+        for (size_t i = 0; i < enemies.size(); i++) {
+            enemies[i].update(deltaTime);
+        }
+        auto enemiesNewEnd = std::remove_if(enemies.begin(), enemies.end(),
+        [] (const Enemy& e) {
+            return e.isOffScreen(screenHeight);
+        });
 
         window.clear();
 
