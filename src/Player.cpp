@@ -1,7 +1,7 @@
 #include "Player.hpp"
 
 // TODO: set player edge boundaries
-
+// TODO: mind player-enemy collision.
 Player::Player() {
     shape.setRadius(50);
     shape.setFillColor(sf::Color::Green);

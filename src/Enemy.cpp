@@ -16,6 +16,7 @@ void Enemy::draw(sf::RenderWindow& window) const {
     window.draw(shape);
 }
 
+//TODO: collision still wrong, now whole object blinks off.
 bool Enemy::isOffScreen(unsigned int screenHeight) const {
     return shape.getPosition().y + shape.getSize().y / 2.f > screenHeight;
 }
