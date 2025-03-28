@@ -17,5 +17,5 @@ void Enemy::draw(sf::RenderWindow& window) const {
 }
 
 bool Enemy::isOffScreen(unsigned int screenHeight) const {
-    return ((shape.getPosition().y < 0) || (shape.getPosition().y < screenHeight));
+    return shape.getPosition().y + shape.getSize().y / 2.f > screenHeight;
 }
