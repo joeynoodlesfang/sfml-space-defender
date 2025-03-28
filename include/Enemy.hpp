@@ -7,6 +7,7 @@ public:
     
     void update(float deltaTime);
     void draw(sf::RenderWindow& window) const;
+    bool isOffScreen(unsigned int screenHeight) const;
 private:
     sf::RectangleShape shape;
     float speed = 100.0f;

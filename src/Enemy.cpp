@@ -15,3 +15,7 @@ void Enemy::update(float deltaTime) {
 void Enemy::draw(sf::RenderWindow& window) const {
     window.draw(shape);
 }
+
+bool Enemy::isOffScreen(unsigned int screenHeight) const {
+    return ((shape.getPosition().y < 0) || (shape.getPosition().y < screenHeight));
+}
