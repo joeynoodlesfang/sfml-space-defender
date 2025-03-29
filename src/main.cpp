@@ -48,9 +48,9 @@ static void updateDebugText(sf::Text& debugText,
 
     for (const auto& obj : gameObjects) {
         if (dynamic_cast<const Bullet*>(obj.get()))
-            ++bulletCount;
+            bulletCount++;
         else if (dynamic_cast<const Enemy*>(obj.get()))
-            ++enemyCount;
+            enemyCount++;
     }
 
     debugText.setString(
