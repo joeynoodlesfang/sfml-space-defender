@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include <iostream>
+#include <memory>
 #include "Player.hpp"
 
 #include "Bullet.hpp"
@@ -40,12 +41,21 @@ static bool setupDebugText(sf::Text& debugText)
 }
 
 static void updateDebugText(sf::Text& debugText,
-    const std::vector<Bullet>& bullets,
-    const std::vector<Enemy>& enemies)
+    const std::vector<std::unique_ptr<GameObject>>& gameObjects)
 {
+    int bulletCount = 0;
+    int enemyCount = 0;
+
+    for (const auto& obj : gameObjects) {
+        if (dynamic_cast<const Bullet*>(obj.get()))
+            ++bulletCount;
+        else if (dynamic_cast<const Enemy*>(obj.get()))
+            ++enemyCount;
+    }
+
     debugText.setString(
-    "Enemies: " + std::to_string(enemies.size()) +
-    "\nBullets: " + std::to_string(bullets.size()));
+        "Enemies: " + std::to_string(enemyCount) +
+        "\nBullets: " + std::to_string(bulletCount));
 }
 
 int main()
@@ -60,17 +70,15 @@ int main()
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // Seed RNG
 
     Player player;
+    std::vector<std::unique_ptr<GameObject>> gameObjects;
 
-    std::vector<Bullet> bullets;
     sf::Clock clock;
     sf::Clock fireCooldownClock; 
-    
-    std::vector<Enemy> enemies;
     sf::Clock enemySpawnClock;
+
     float enemySpawnInterval = 3.0f;
 
     std::cout << "Starting Space Defender v-1.2" << std::endl;
-
 
 
     while (window.isOpen())
@@ -83,11 +91,11 @@ int main()
                 window.close();
         }
     
-        // Handle shooting
+        // Handle bullet spawn
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
             if (fireCooldownClock.getElapsedTime().asSeconds() > 0.2f) {
                 sf::Vector2f spawnPos = player.getPosition();
-                bullets.emplace_back(spawnPos);
+                gameObjects.push_back(std::make_unique<Bullet>(spawnPos));
                 fireCooldownClock.restart();
             }
         }
@@ -96,43 +104,36 @@ int main()
         //TODO: fix edge spawning (current player too big)
         if (enemySpawnClock.getElapsedTime().asSeconds() > enemySpawnInterval) {
             float x = static_cast<float>(std::rand() % static_cast<int>(screenWidth - 40)) + 20.f;
-            enemies.emplace_back(sf::Vector2f(x, -40.f));
+            gameObjects.push_back(std::make_unique<Enemy>(sf::Vector2f(x, -40.f)));
             enemySpawnClock.restart();
         }
 
         // Updates
         player.update(deltaTime);
         
-        for (size_t i = 0; i < bullets.size(); i++) {
-            bullets[i].update(deltaTime);
+        for (auto& obj : gameObjects) {
+            obj->update(deltaTime);
         }
-        auto bulletNewEnd = std::remove_if(bullets.begin(), bullets.end(),
-        [](const Bullet& b) {
-            return b.isOffScreen(screenHeight);
-        });
-        bullets.erase(bulletNewEnd, bullets.end());
+        
+        // Erases
+        gameObjects.erase(
+            std::remove_if(gameObjects.begin(), gameObjects.end(),
+                [](const std::unique_ptr<GameObject>& obj) {
+                    auto* bounded = dynamic_cast<ScreenBounded*>(obj.get());
+                    return bounded && bounded->isOffScreen(screenHeight);
+                }),
+            gameObjects.end());
+    
 
-        for (size_t i = 0; i < enemies.size(); i++) {
-            enemies[i].update(deltaTime);
-        }
-        auto enemiesNewEnd = std::remove_if(enemies.begin(), enemies.end(),
-        [] (const Enemy& e) {
-            return e.isOffScreen(screenHeight);
-        });
-        enemies.erase(enemiesNewEnd, enemies.end());
-
-        updateDebugText(debugText, bullets, enemies);
+        updateDebugText(debugText, gameObjects);
         
         window.clear();
 
         // Draw
         player.draw(window);
-        for (size_t i = 0; i < bullets.size(); i++) {
-            bullets[i].draw(window);
-        }
-        for (size_t i = 0; i < enemies.size(); i++) {
-            enemies[i].draw(window);
-        }
+        for (auto& obj : gameObjects) {
+            obj->draw(window);
+        }        
         window.draw(debugText);
         window.display();
     }
