@@ -20,6 +20,10 @@ sf::FloatRect Bullet::getBounds() const {
     return shape.getGlobalBounds();
 }
 
+sf::Vector2f Bullet::getPosition(void) const {
+    return shape.getPosition();
+}
+
 bool Bullet::isOffScreen() const {
     return shape.getPosition().y + shape.getSize().y < 0;
 }

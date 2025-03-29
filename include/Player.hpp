@@ -10,8 +10,7 @@ public:
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) const override;
     sf::FloatRect getBounds() const override;
-
-    sf::Vector2f getPosition(void);
+    sf::Vector2f getPosition(void) const override;
 
 private:
     sf::CircleShape shape;
