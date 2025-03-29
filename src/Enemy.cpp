@@ -24,7 +24,6 @@ sf::Vector2f Enemy::getPosition(void) const {
     return shape.getPosition();
 }
 
-//TODO: collision still wrong, now whole object blinks off.
 bool Enemy::isOffScreen(unsigned int screenHeight) const {
-    return shape.getPosition().y + shape.getSize().y / 2.f > screenHeight;
+    return shape.getPosition().y - shape.getSize().y / 2.f > screenHeight;
 }

@@ -108,7 +108,7 @@ int main()
         }
         auto bulletNewEnd = std::remove_if(bullets.begin(), bullets.end(),
         [](const Bullet& b) {
-            return b.isOffScreen();
+            return b.isOffScreen(screenHeight);
         });
         bullets.erase(bulletNewEnd, bullets.end());
 

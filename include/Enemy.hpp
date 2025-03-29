@@ -2,8 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 #include "GameObject.hpp"
+#include "ScreenBounded.hpp"
 
-class Enemy : public GameObject {
+class Enemy : public GameObject, public ScreenBounded {
 public:
     Enemy(const sf::Vector2f& position);
     
@@ -12,7 +13,8 @@ public:
     sf::FloatRect getBounds() const override;
     sf::Vector2f getPosition(void) const override;
 
-    bool isOffScreen(unsigned int screenHeight) const;
+    bool isOffScreen(unsigned int screenHeight) const override;
+
 private:
     sf::RectangleShape shape;
     float speed = 100.0f;

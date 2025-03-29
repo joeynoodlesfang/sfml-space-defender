@@ -2,8 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 #include "GameObject.hpp"
+#include "ScreenBounded.hpp"
 
-class Bullet : public GameObject{
+class Bullet : public GameObject, public ScreenBounded {
 public:
     Bullet(const sf::Vector2f& position);
 
@@ -12,7 +13,7 @@ public:
     sf::FloatRect getBounds() const override;
     sf::Vector2f getPosition(void) const override;
 
-    bool isOffScreen() const;
+    bool isOffScreen(unsigned int screenHeight) const override;
 
 private:
     sf::RectangleShape shape;

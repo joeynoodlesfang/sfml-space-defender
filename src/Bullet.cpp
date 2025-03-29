@@ -24,7 +24,7 @@ sf::Vector2f Bullet::getPosition(void) const {
     return shape.getPosition();
 }
 
-bool Bullet::isOffScreen() const {
+bool Bullet::isOffScreen(unsigned int screenHeight) const {
     return shape.getPosition().y + shape.getSize().y < 0;
 }
 
