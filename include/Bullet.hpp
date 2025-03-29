@@ -1,14 +1,17 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 
-class Bullet {
+#include <SFML/Graphics.hpp>
+#include "GameObject.hpp"
+
+class Bullet : public GameObject{
 public:
     Bullet(const sf::Vector2f& position);
 
-    void update(float deltaTime);
-    void draw(sf::RenderWindow& window) const;
+    void update(float deltaTime) override;
+    void draw(sf::RenderWindow& window) const override;
+    sf::FloatRect getBounds() const override;
+
     bool isOffScreen() const;
-    sf::FloatRect getBounds() const;
 
 private:
     sf::RectangleShape shape;

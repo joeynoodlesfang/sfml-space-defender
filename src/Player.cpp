@@ -27,8 +27,12 @@ void Player::update(float deltaTime) {
     shape.move(movement);
 }
 
-void Player::draw(sf::RenderWindow& window) {
+void Player::draw(sf::RenderWindow& window) const {
     window.draw(shape);
+}
+
+sf::FloatRect Player::getBounds() const {
+    return shape.getGlobalBounds();
 }
 
 sf::Vector2f Player::getPosition(void) {

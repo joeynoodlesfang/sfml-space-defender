@@ -16,10 +16,11 @@ void Bullet::draw(sf::RenderWindow& window) const {
     window.draw(shape);
 }
 
+sf::FloatRect Bullet::getBounds() const {
+    return shape.getGlobalBounds();
+}
+
 bool Bullet::isOffScreen() const {
     return shape.getPosition().y + shape.getSize().y < 0;
 }
 
-sf::FloatRect Bullet::getBounds() const {
-    return shape.getGlobalBounds();
-}
