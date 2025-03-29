@@ -32,6 +32,8 @@ SFML-Space-Defender
 │   ├── Config.cpp              # Singleton for game settings
 └── include/                    # Header files
 │   ├── Game.h
+│   ├── GameObject.h            # Abstract for all interacting game objects
+│   ├── ScreenObject.h          # Mixin for objects exiting/(entering) screen
 │   ├── Player.h
 │   ├── Enemy.h
 │   ├── Bullet.h
