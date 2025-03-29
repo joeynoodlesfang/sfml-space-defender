@@ -3,6 +3,8 @@
 // TODO: set player edge boundaries
 // TODO: mind player-enemy collision.
 Player::Player() {
+    speed = 300.f;
+
     shape.setRadius(50);
     shape.setFillColor(sf::Color::Green);
     shape.setOutlineColor(sf::Color::Red);
@@ -37,4 +39,12 @@ sf::FloatRect Player::getBounds() const {
 
 sf::Vector2f Player::getPosition(void) const {
     return shape.getPosition();
+}
+
+void Player::markForDeletion(void) {
+    m_markedForDeletion = true;
+}
+
+bool Player::isMarkedForDeletion(void) const {
+    return m_markedForDeletion;
 }

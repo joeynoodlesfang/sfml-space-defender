@@ -1,6 +1,8 @@
 #include "Enemy.hpp"
 
 Enemy::Enemy(const sf::Vector2f& position) {
+    speed = 100.f;
+    
     shape.setSize({40.f, 40.f});
     shape.setFillColor(sf::Color::Red);
     shape.setOrigin(shape.getSize() / 2.f);
@@ -26,4 +28,12 @@ sf::Vector2f Enemy::getPosition(void) const {
 
 bool Enemy::isOffScreen(unsigned int screenHeight) const {
     return shape.getPosition().y - shape.getSize().y / 2.f > screenHeight;
+}
+
+void Enemy::markForDeletion(void) {
+    m_markedForDeletion = true;
+}
+
+bool Enemy::isMarkedForDeletion(void) const {
+    return m_markedForDeletion;
 }

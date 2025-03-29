@@ -41,21 +41,12 @@ static bool setupDebugText(sf::Text& debugText)
 }
 
 static void updateDebugText(sf::Text& debugText,
-    const std::vector<std::unique_ptr<GameObject>>& gameObjects)
+    const std::vector<std::unique_ptr<Bullet>>& bullets,
+    const std::vector<std::unique_ptr<Enemy>>& enemies)
 {
-    int bulletCount = 0;
-    int enemyCount = 0;
-
-    for (const auto& obj : gameObjects) {
-        if (dynamic_cast<const Bullet*>(obj.get()))
-            bulletCount++;
-        else if (dynamic_cast<const Enemy*>(obj.get()))
-            enemyCount++;
-    }
-
     debugText.setString(
-        "Enemies: " + std::to_string(enemyCount) +
-        "\nBullets: " + std::to_string(bulletCount));
+        "Enemies: " + std::to_string(enemies.size()) +
+        "\nBullets: " + std::to_string(bullets.size()));
 }
 
 int main()
@@ -70,7 +61,9 @@ int main()
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // Seed RNG
 
     Player player;
-    std::vector<std::unique_ptr<GameObject>> gameObjects;
+    std::vector<std::unique_ptr<Bullet>> bullets;
+    std::vector<std::unique_ptr<Enemy>> enemies;
+
 
     sf::Clock clock;
     sf::Clock fireCooldownClock; 
@@ -95,7 +88,7 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
             if (fireCooldownClock.getElapsedTime().asSeconds() > 0.2f) {
                 sf::Vector2f spawnPos = player.getPosition();
-                gameObjects.push_back(std::make_unique<Bullet>(spawnPos));
+                bullets.push_back(std::make_unique<Bullet>(spawnPos));
                 fireCooldownClock.restart();
             }
         }
@@ -104,36 +97,50 @@ int main()
         //TODO: fix edge spawning (current player too big)
         if (enemySpawnClock.getElapsedTime().asSeconds() > enemySpawnInterval) {
             float x = static_cast<float>(std::rand() % static_cast<int>(screenWidth - 40)) + 20.f;
-            gameObjects.push_back(std::make_unique<Enemy>(sf::Vector2f(x, -40.f)));
+            enemies.push_back(std::make_unique<Enemy>(sf::Vector2f(x, -40.f)));
             enemySpawnClock.restart();
         }
 
         // Updates
         player.update(deltaTime);
+        for (auto& bullet : bullets) bullet->update(deltaTime);
+        for (auto& enemy : enemies) enemy->update(deltaTime);
         
-        for (auto& obj : gameObjects) {
-            obj->update(deltaTime);
+        // Collision detection (bullets vs enemies)
+        for (auto& bullet : bullets) {
+            sf::FloatRect bulletBounds = bullet->getBounds();
+            for (auto& enemy : enemies) {
+                if (bulletBounds.findIntersection(enemy->getBounds())) {
+                    bullet->markForDeletion();
+                    enemy->markForDeletion();
+                    break;
+                }
+            }
         }
         
-        // Erases
-        gameObjects.erase(
-            std::remove_if(gameObjects.begin(), gameObjects.end(),
-                [](const std::unique_ptr<GameObject>& obj) {
-                    auto* bounded = dynamic_cast<ScreenBounded*>(obj.get());
-                    return bounded && bounded->isOffScreen(screenHeight);
+        // erase handle
+        bullets.erase(
+            std::remove_if(bullets.begin(), bullets.end(),
+                [](const std::unique_ptr<Bullet>& bullet) {
+                    return bullet->isOffScreen(screenHeight) || bullet->isMarkedForDeletion();
                 }),
-            gameObjects.end());
-    
+            bullets.end());
 
-        updateDebugText(debugText, gameObjects);
+        enemies.erase(
+            std::remove_if(enemies.begin(), enemies.end(),
+                [](const std::unique_ptr<Enemy>& enemy) {
+                    return enemy->isOffScreen(screenHeight) || enemy->isMarkedForDeletion();
+                }),
+            enemies.end());
+
+        updateDebugText(debugText, bullets, enemies);
         
         window.clear();
 
         // Draw
         player.draw(window);
-        for (auto& obj : gameObjects) {
-            obj->draw(window);
-        }        
+        for (auto& bullet : bullets) bullet->draw(window);
+        for (auto& enemy : enemies) enemy->draw(window);    
         window.draw(debugText);
         window.display();
     }

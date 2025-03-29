@@ -1,6 +1,8 @@
 #include "Bullet.hpp"
 
 Bullet::Bullet(const sf::Vector2f& position) {
+    speed = 600.0f;
+
     shape.setSize({8.f, 20.f});
     shape.setFillColor(sf::Color::Yellow);
     shape.setPosition(position);
@@ -28,3 +30,10 @@ bool Bullet::isOffScreen(unsigned int screenHeight) const {
     return shape.getPosition().y + shape.getSize().y < 0;
 }
 
+void Bullet::markForDeletion(void) {
+    m_markedForDeletion = true;
+}
+
+bool Bullet::isMarkedForDeletion(void) const {
+    return m_markedForDeletion;
+}
