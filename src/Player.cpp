@@ -31,6 +31,7 @@ void Player::update(float deltaTime) {
     sf::Vector2f pos = shape.getPosition();
     sf::Vector2f size = {shape.getRadius(), shape.getRadius()};
 
+    
     pos.x = std::clamp(pos.x, size.x, screenWidth - size.x);
     pos.y = std::clamp(pos.y, size.y, screenHeight - size.y);
 
