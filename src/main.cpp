@@ -117,7 +117,13 @@ int main()
                 }
             }
         }
-        
+
+        for (auto& enemy : enemies) {
+            if (enemy->getBounds().intersects(player.getBounds())) {
+                std::cout << "Player hit! Game Over.\n";
+                window.close(); // TODO: proper gameover display
+            }
+        }
         // erase handle
         bullets.erase(
             std::remove_if(bullets.begin(), bullets.end(),
