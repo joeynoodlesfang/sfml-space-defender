@@ -27,6 +27,14 @@ void Player::update(float deltaTime) {
         movement.y += speed * deltaTime;
 
     shape.move(movement);
+
+    sf::Vector2f pos = shape.getPosition();
+    sf::Vector2f size = {shape.getRadius(), shape.getRadius()};
+
+    pos.x = std::clamp(pos.x, size.x, screenWidth - size.x);
+    pos.y = std::clamp(pos.y, size.y, screenHeight - size.y);
+
+    shape.setPosition(pos);
 }
 
 void Player::draw(sf::RenderWindow& window) const {
