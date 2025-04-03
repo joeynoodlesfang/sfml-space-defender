@@ -1,4 +1,5 @@
 #include "Player.hpp"
+#include <algorithm>
 
 // TODO: set player edge boundaries
 // TODO: mind player-enemy collision.
@@ -13,7 +14,7 @@ Player::Player() {
     shape.setPosition({600.f, 500.f}); 
 }
 
-void Player::update(float deltaTime) {
+void Player::update(float deltaTime, const unsigned int screenWidth, const unsigned int screenHeight) {
     sf::Vector2f movement;
 
     // use WASD to prevent key ghosting

@@ -102,9 +102,9 @@ int main()
         }
 
         // Updates
-        player.update(deltaTime);
-        for (auto& bullet : bullets) bullet->update(deltaTime);
-        for (auto& enemy : enemies) enemy->update(deltaTime);
+        player.update(deltaTime, screenWidth, screenHeight);
+        for (auto& bullet : bullets) bullet->update(deltaTime, screenWidth, screenHeight);
+        for (auto& enemy : enemies) enemy->update(deltaTime, screenWidth, screenHeight);
         
         // Collision detection (bullets vs enemies)
         for (auto& bullet : bullets) {
@@ -119,7 +119,7 @@ int main()
         }
 
         for (auto& enemy : enemies) {
-            if (enemy->getBounds().intersects(player.getBounds())) {
+            if (enemy->getBounds().findIntersection(player.getBounds())) {
                 std::cout << "Player hit! Game Over.\n";
                 window.close(); // TODO: proper gameover display
             }

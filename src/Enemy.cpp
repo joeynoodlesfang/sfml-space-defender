@@ -9,7 +9,7 @@ Enemy::Enemy(const sf::Vector2f& position) {
     shape.setPosition(position);
 }
 
-void Enemy::update(float deltaTime) {
+void Enemy::update(float deltaTime, const unsigned int screenWidth, const unsigned int screenHeight) {
     sf::Vector2f movement(0.f, speed * deltaTime);
     shape.move(movement);
 }
