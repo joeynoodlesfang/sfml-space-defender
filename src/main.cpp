@@ -58,7 +58,12 @@ int main()
     sf::Text debugText(font, "", 16);
     if (!setupDebugText(debugText)) return 1;
 
-    auto window = sf::RenderWindow(sf::VideoMode({screenWidth, 1000u}), "Space Defender");
+    GameConfig& config = GameConfig::get();
+    config.setScreenWidth(1200u);
+    config.setScreenHeight(1000u);
+
+
+    auto window = sf::RenderWindow(sf::VideoMode({config.getScreenWidth(), config.getScreenHeight()}), "Space Defender");
     window.setFramerateLimit(144);
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // Seed RNG
 
@@ -73,7 +78,7 @@ int main()
 
     float enemySpawnInterval = 3.0f;
 
-    std::cout << "Starting Space Defender v-1.2" << std::endl;
+    std::cout << "Starting Space Defender v-1.3" << std::endl;
 
 
     while (window.isOpen())
@@ -104,9 +109,9 @@ int main()
         }
 
         // Updates
-        player.update(deltaTime, screenWidth, screenHeight);
-        for (auto& bullet : bullets) bullet->update(deltaTime, screenWidth, screenHeight);
-        for (auto& enemy : enemies) enemy->update(deltaTime, screenWidth, screenHeight);
+        player.update(deltaTime);
+        for (auto& bullet : bullets) bullet->update(deltaTime);
+        for (auto& enemy : enemies) enemy->update(deltaTime);
         
         // Collision detection (bullets vs enemies)
         for (auto& bullet : bullets) {

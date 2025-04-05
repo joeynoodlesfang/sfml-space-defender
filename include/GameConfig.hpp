@@ -1,7 +1,7 @@
 #pragma once
 
 struct GameConfig {
-    int screenWidth = 800;
+    unsigned int screenWidth = 800;
     int screenHeight = 600;
     bool fullscreen = false;
 
@@ -9,6 +9,15 @@ struct GameConfig {
         static GameConfig instance;
         return instance;
     }
+
+    unsigned int getScreenWidth() const { return screenWidth; }
+    void setScreenWidth(unsigned int width) { screenWidth = width; }
+
+    unsigned int getScreenHeight() const { return screenHeight; }
+    void setScreenHeight(unsigned int height) { screenHeight = height; }
+
+    bool isFullscreen() const { return fullscreen; }
+    void setFullscreen(bool enable) { fullscreen = enable; }
 
 private:
     GameConfig() = default;
