@@ -9,7 +9,7 @@ Bullet::Bullet(const sf::Vector2f& position) {
     shape.setOrigin(shape.getSize() / 2.f);
 }
 
-void Bullet::update(float deltaTime, const unsigned int screenWidth, const unsigned int screenHeight) {
+void Bullet::update(float deltaTime) {
     sf::Vector2f movement(0.f, -speed * deltaTime);
     shape.move(movement);
 }

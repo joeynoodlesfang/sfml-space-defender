@@ -2,6 +2,8 @@
 #include <SFML/System/Clock.hpp>
 #include <iostream>
 #include <memory>
+
+#include "GameConfig.hpp"
 #include "Player.hpp"
 
 #include "Bullet.hpp"

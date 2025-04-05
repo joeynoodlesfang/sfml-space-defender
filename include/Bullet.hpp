@@ -8,7 +8,7 @@ class Bullet : public GameObject, public ScreenBounded {
 public:
     Bullet(const sf::Vector2f& position);
 
-    void update(float deltaTime, const unsigned int screenWidth, const unsigned int screenHeight) override;
+    void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) const override;
     sf::FloatRect getBounds() const override;
     sf::Vector2f getPosition(void) const override;

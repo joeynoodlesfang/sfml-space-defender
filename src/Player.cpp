@@ -1,4 +1,5 @@
 #include "Player.hpp"
+#include "GameConfig.hpp"
 #include <algorithm>
 
 // TODO: set player edge boundaries
@@ -14,8 +15,10 @@ Player::Player() {
     shape.setPosition({600.f, 500.f}); 
 }
 
-void Player::update(float deltaTime, const unsigned int screenWidth, const unsigned int screenHeight) {
+void Player::update(float deltaTime) {
     sf::Vector2f movement;
+    int screenWidth = GameConfig::get().screenWidth;
+    int screenHeight = GameConfig::get().screenHeight;
 
     // use WASD to prevent key ghosting
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
