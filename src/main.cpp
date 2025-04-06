@@ -56,6 +56,8 @@ static void updateDebugText(sf::Text& debugText,
 
 int main()
 {
+    std::cout << "Starting Space Defender v-1.3" << std::endl;
+
     sf::Font font;
     if (!loadFonts(font)) return 1;
     sf::Text debugText(font, "", 16);
@@ -65,7 +67,6 @@ int main()
     config.setScreenWidth(1200u);
     config.setScreenHeight(1000u);
 
-
     auto window = sf::RenderWindow(sf::VideoMode({config.getScreenWidth(), config.getScreenHeight()}), "Space Defender");
     window.setFramerateLimit(144);
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // Seed RNG
@@ -73,16 +74,10 @@ int main()
     Player player;
     std::vector<std::unique_ptr<Bullet>> bullets;
     std::vector<std::unique_ptr<Enemy>> enemies;
-    EnemySpawner spawner(3.0f, config.getScreenWidth());
-
+    EnemySpawner spawner(config.getScreenWidth());
 
     sf::Clock clock;
     sf::Clock fireCooldownClock; 
-
-
-
-    std::cout << "Starting Space Defender v-1.3" << std::endl;
-
 
     while (window.isOpen())
     {
@@ -112,6 +107,10 @@ int main()
         updateEntities(bullets, deltaTime);
         updateEntities(enemies, deltaTime);
         
+        if (enemies.empty() && spawner.isWaveComplete()) {
+            spawner.startNextWave();
+        }        
+
         // Collision detection (bullets vs enemies)
         for (auto& bullet : bullets) {
             sf::FloatRect bulletBounds = bullet->getBounds();
