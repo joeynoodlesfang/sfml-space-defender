@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "GameConfig.hpp"
+#include "EntityUtils.hpp"
+
 #include "Player.hpp"
 
 #include "Bullet.hpp"
@@ -110,8 +112,8 @@ int main()
 
         // Updates
         player.update(deltaTime);
-        for (auto& bullet : bullets) bullet->update(deltaTime);
-        for (auto& enemy : enemies) enemy->update(deltaTime);
+        updateEntities(bullets, deltaTime);
+        updateEntities(enemies, deltaTime);
         
         // Collision detection (bullets vs enemies)
         for (auto& bullet : bullets) {
@@ -125,35 +127,30 @@ int main()
             }
         }
 
+        // Collision detection (enemies vs player)
         for (auto& enemy : enemies) {
             if (enemy->getBounds().findIntersection(player.getBounds())) {
                 std::cout << "Player hit! Game Over.\n";
                 window.close(); // TODO: proper gameover display
             }
         }
-        // erase handle
-        bullets.erase(
-            std::remove_if(bullets.begin(), bullets.end(),
-                [](const std::unique_ptr<Bullet>& bullet) {
-                    return bullet->isOffScreen(screenHeight) || bullet->isMarkedForDeletion();
-                }),
-            bullets.end());
 
-        enemies.erase(
-            std::remove_if(enemies.begin(), enemies.end(),
-                [](const std::unique_ptr<Enemy>& enemy) {
-                    return enemy->isOffScreen(screenHeight) || enemy->isMarkedForDeletion();
-                }),
-            enemies.end());
+        removeEntitiesIf(bullets, [](const std::unique_ptr<Bullet>& bullet) {
+                return bullet->isOffScreen(screenHeight) || bullet->isMarkedForDeletion();
+            });
+
+        removeEntitiesIf(enemies, [](const std::unique_ptr<Enemy>& enemy) {
+                return enemy->isOffScreen(screenHeight) || enemy->isMarkedForDeletion();
+            });
 
         updateDebugText(debugText, bullets, enemies);
         
         window.clear();
 
-        // Draw
+        // Draw 
         player.draw(window);
-        for (auto& bullet : bullets) bullet->draw(window);
-        for (auto& enemy : enemies) enemy->draw(window);    
+        drawEntities(bullets, window);
+        drawEntities(enemies, window);
         window.draw(debugText);
         window.display();
     }
