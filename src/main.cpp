@@ -13,6 +13,7 @@
 #include <algorithm>
 
 #include "Enemy.hpp"
+#include "EnemySpawner.hpp"
 #include <cstdlib> // rand
 #include <ctime> // srand
 
@@ -72,13 +73,13 @@ int main()
     Player player;
     std::vector<std::unique_ptr<Bullet>> bullets;
     std::vector<std::unique_ptr<Enemy>> enemies;
+    EnemySpawner spawner(3.0f, config.getScreenWidth());
 
 
     sf::Clock clock;
     sf::Clock fireCooldownClock; 
-    sf::Clock enemySpawnClock;
 
-    float enemySpawnInterval = 3.0f;
+
 
     std::cout << "Starting Space Defender v-1.3" << std::endl;
 
@@ -104,13 +105,9 @@ int main()
 
         // Handle enemy spawn
         //TODO: fix edge spawning (current player too big)
-        if (enemySpawnClock.getElapsedTime().asSeconds() > enemySpawnInterval) {
-            float x = static_cast<float>(std::rand() % static_cast<int>(screenWidth - 40)) + 20.f;
-            enemies.push_back(std::make_unique<Enemy>(sf::Vector2f(x, -40.f)));
-            enemySpawnClock.restart();
-        }
-
+        
         // Updates
+        spawner.update(enemies);
         player.update(deltaTime);
         updateEntities(bullets, deltaTime);
         updateEntities(enemies, deltaTime);

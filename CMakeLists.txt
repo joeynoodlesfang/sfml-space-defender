@@ -19,6 +19,7 @@ add_executable(SpaceDefender
     src/Player.cpp
     src/Bullet.cpp
     src/Enemy.cpp
+    src/EnemySpawner.cpp
 )
 target_compile_features(SpaceDefender PRIVATE cxx_std_17)
 target_link_libraries(SpaceDefender PRIVATE SFML::Graphics)
