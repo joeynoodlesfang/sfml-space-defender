@@ -5,6 +5,14 @@ A 2D space shooter game built with SFML, demonstrating Object-Oriented Programmi
 
 <br>
 
+## TODO
+<ul>
+  <li>Spawn message waves in game</li>
+  <li>Wave end after last enemy of wave dead</li>
+  <li>Delay of 5 seconds after each wave before spawn</li>
+</ul>
+
+
 ## Game Features
 <ul>
   <li>Player-controlled spaceship</li>
