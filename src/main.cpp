@@ -19,8 +19,10 @@
 
 #include <filesystem>
 
-static const unsigned int screenWidth = 1200u;
-static const unsigned int screenHeight = 1000u;
+#include "GameMessageManager.hpp"
+
+static const unsigned int defaultScreenWidth = 1200u;
+static const unsigned int defaultScreenHeight = 1000u;
 
 std::filesystem::path exePath = std::filesystem::canonical("/proc/self/exe");
 
@@ -62,10 +64,11 @@ int main()
     if (!loadFonts(font)) return 1;
     sf::Text debugText(font, "", 16);
     if (!setupDebugText(debugText)) return 1;
+    GameMessageManager messageManager(font);
 
     GameConfig& config = GameConfig::get();
-    config.setScreenWidth(1200u);
-    config.setScreenHeight(1000u);
+    config.setScreenWidth(defaultScreenWidth);
+    config.setScreenHeight(defaultScreenHeight);
 
     auto window = sf::RenderWindow(sf::VideoMode({config.getScreenWidth(), config.getScreenHeight()}), "Space Defender");
     window.setFramerateLimit(144);
@@ -106,6 +109,7 @@ int main()
         player.update(deltaTime);
         updateEntities(bullets, deltaTime);
         updateEntities(enemies, deltaTime);
+        messageManager.update();
         
         if (enemies.empty() && spawner.isWaveComplete()) {
             spawner.startNextWave();
@@ -131,12 +135,12 @@ int main()
             }
         }
 
-        removeEntitiesIf(bullets, [](const std::unique_ptr<Bullet>& bullet) {
-                return bullet->isOffScreen(screenHeight) || bullet->isMarkedForDeletion();
+        removeEntitiesIf(bullets, [&config](const std::unique_ptr<Bullet>& bullet) {
+                return bullet->isOffScreen(config.getScreenHeight()) || bullet->isMarkedForDeletion();
             });
 
-        removeEntitiesIf(enemies, [](const std::unique_ptr<Enemy>& enemy) {
-                return enemy->isOffScreen(screenHeight) || enemy->isMarkedForDeletion();
+        removeEntitiesIf(enemies, [&config](const std::unique_ptr<Enemy>& enemy) {
+                return enemy->isOffScreen(config.getScreenHeight()) || enemy->isMarkedForDeletion();
             });
 
         updateDebugText(debugText, bullets, enemies);
@@ -148,6 +152,8 @@ int main()
         drawEntities(bullets, window);
         drawEntities(enemies, window);
         window.draw(debugText);
+        messageManager.draw(window);
+
         window.display();
     }
 
