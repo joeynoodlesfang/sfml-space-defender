@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "Message.hpp"
+
 //Legacy UNUSED
 EnemySpawner::EnemySpawner(float spawnInterval, unsigned int screenWidth)
     : spawnInterval(spawnInterval), screenWidth(screenWidth) {}
@@ -13,7 +15,7 @@ EnemySpawner::EnemySpawner(unsigned int screenWidth)
     waves.push_back(Wave{ 5, 2.0f });   // 5 enemies, 2s apart
     waves.push_back(Wave{ 8, 1.5f });
     waves.push_back(Wave{ 12, 1.0f });
-    std::cout << "[WaveSpawner] Starting Wave 1\n";
+    postMessage("[WaveSpawner] Starting Wave 1\n");
     spawnClock.restart();
 }
 
@@ -37,7 +39,7 @@ void EnemySpawner::update(std::vector<std::unique_ptr<Enemy>>& enemies) {
                 spawnEnemy(enemies);
             }
         } else if (!waveComplete) {
-            std::cout << "[WaveSpawner] Wave " << currentWaveIndex + 1 << " complete.\n";
+            postMessage("[WaveSpawner] Wave " + std::to_string(currentWaveIndex + 1) + " complete.\n");
             waveComplete = true;
         }
     } else { // Legacy random spawner
@@ -56,11 +58,11 @@ void EnemySpawner::startNextWave() {
         enemiesSpawnedInWave = 0;
         waveComplete = false;
         spawnClock.restart();
-        std::cout << "[WaveSpawner] Starting Wave " << currentWaveIndex + 1 << "\n";
+        postMessage("[WaveSpawner] Starting Wave " + std::to_string(currentWaveIndex + 1) + "\n");
     } else {
         if (!spawnerEmpty) {
             spawnerEmpty = true;
-            std::cout << "[WaveSpawner] No more waves!\n";
+            postMessage("[WaveSpawner] No more waves!\n");
         }
     }
 }
