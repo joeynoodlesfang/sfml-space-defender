@@ -1,11 +1,10 @@
 
 ## TODO
-<ul>
-  <li>Spawn message waves in game</li>
+<ol>
   <li>Wave end after last enemy of wave dead</li>
   <li>Delay of 5 seconds after each wave before spawn</li>
   <li>Reduce game width without changing screen width</li>
-</ul>
+</ol>
 
 
 ## Proposed Structure
@@ -36,9 +35,10 @@ SFML-Space-Defender
 │   ├── SoundManager.h
 │   ├── EnemyFactory.h
 │   ├── GameState.h
-│   ├── GaemConfig.hpp          # Singleton for game settings (currently all in hpp)
+│   ├── GameConfig.hpp          # Singleton for game settings (currently all in hpp)
 │   ├── EntityUtils.hpp         # Helper template fxns for iterating object lists in main/game loop
 │   ├── GameMessageManager.hpp  
+│   ├── Message.hpp             # Message Helper (Debug will be added here(?))
 └── assets/                     # Graphics & sounds
 │   ├── fonts/
 │   |   ├── arial.ttf           # For debug texts
