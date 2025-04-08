@@ -1,7 +1,20 @@
 #include "GameMessageManager.hpp"
 
-GameMessageManager::GameMessageManager(sf::Font& font)
-    : font(font) {}
+static GameMessageManager* instance = nullptr;
+
+void GameMessageManager::init(sf::Font& font) {
+    if (!instance)
+        instance = new GameMessageManager(font);
+}
+
+GameMessageManager::GameMessageManager(sf::Font& font) : font(font) {}
+
+GameMessageManager& GameMessageManager::getInstance() {
+    if (!instance) {
+        throw std::runtime_error("GameMessageManager::init() must be called before getInstance()");
+    }
+    return *instance;
+}
 
 void GameMessageManager::addMessage(const std::string& message, float duration) {
     messages.push_back({ message, sf::Clock(), duration });

@@ -10,14 +10,13 @@ struct GameConfig {
         return instance;
     }
 
-    unsigned int getScreenWidth() const { return screenWidth; }
     void setScreenWidth(unsigned int width) { screenWidth = width; }
-
-    unsigned int getScreenHeight() const { return screenHeight; }
     void setScreenHeight(unsigned int height) { screenHeight = height; }
-
-    bool isFullscreen() const { return fullscreen; }
     void setFullscreen(bool enable) { fullscreen = enable; }
+    
+    unsigned int getScreenWidth() const { return screenWidth; }
+    unsigned int getScreenHeight() const { return screenHeight; }
+    bool isFullscreen() const { return fullscreen; }
 
 private:
     GameConfig() = default;

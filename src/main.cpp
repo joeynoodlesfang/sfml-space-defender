@@ -64,7 +64,8 @@ int main()
     if (!loadFonts(font)) return 1;
     sf::Text debugText(font, "", 16);
     if (!setupDebugText(debugText)) return 1;
-    GameMessageManager messageManager(font);
+    GameMessageManager::init(font);
+    GameMessageManager& messageManager = GameMessageManager::getInstance();
 
     GameConfig& config = GameConfig::get();
     config.setScreenWidth(defaultScreenWidth);
