@@ -19,7 +19,7 @@
 
 #include <filesystem>
 
-#include "GameMessageManager.hpp"
+#include "Message.hpp"
 
 static const unsigned int defaultScreenWidth = 1200u;
 static const unsigned int defaultScreenHeight = 1000u;
@@ -83,6 +83,12 @@ int main()
     sf::Clock clock;
     sf::Clock fireCooldownClock; 
 
+    WaveState waveState = WaveState::Idle;
+    sf::Clock waveDelayClock;
+    float waveDelayDuration = 0.f;
+    int currentWaveIndex = 0;
+
+
     while (window.isOpen())
     {
         float deltaTime = clock.restart().asSeconds();
@@ -112,9 +118,12 @@ int main()
         updateEntities(enemies, deltaTime);
         messageManager.update();
         
-        if (enemies.empty() && spawner.isWaveComplete()) {
+
+        // Spawn
+        if (!spawner.isFirstWaveSpawned() ||  \
+            (spawner.isWaveComplete() && !spawner.isAllWavesComplete())) {
             spawner.startNextWave();
-        }        
+        }
 
         // Collision detection (bullets vs enemies)
         for (auto& bullet : bullets) {

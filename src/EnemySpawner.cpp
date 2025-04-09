@@ -5,6 +5,7 @@
 
 #include "Message.hpp"
 
+
 //Legacy UNUSED
 EnemySpawner::EnemySpawner(float spawnInterval, unsigned int screenWidth)
     : spawnInterval(spawnInterval), screenWidth(screenWidth) {}
@@ -19,35 +20,44 @@ EnemySpawner::EnemySpawner(unsigned int screenWidth)
     spawnClock.restart();
 }
 
-void EnemySpawner::spawnEnemy(std::vector<std::unique_ptr<Enemy>>& enemies) {
-    float x = randomX();
-    enemies.push_back(std::make_unique<Enemy>(sf::Vector2f(x, -40.f)));
-    enemiesSpawnedInWave++;
-    spawnClock.restart();
-}
-
 void EnemySpawner::update(std::vector<std::unique_ptr<Enemy>>& enemies) {
-    if (spawnInterval == 0) { // Not legacy check
-        if (currentWaveIndex >= waves.size()) {
-            return; // No more waves
-        }
+    if (currentWaveIndex >= waves.size()) {
+        return; // No more waves
+    }
 
-        const Wave& currentWave = waves[currentWaveIndex];
+    const Wave& currentWave = waves[currentWaveIndex];
+
+    if (enemiesSpawnedInWave < currentWave.totalEnemies) {
+        if (spawnClock.getElapsedTime().asSeconds() > currentWave.spawnInterval) {
+            spawnEnemy(enemies);
+        }
+    } else if (!waveComplete) {
+        postMessage("[WaveSpawner] Wave " + std::to_string(currentWaveIndex + 1) + " complete.\n");
+        waveComplete = true;
+    }
+
+    switch (waveState) {
+        case WaveState::Idle:
+            break;
     
-        if (enemiesSpawnedInWave < currentWave.totalEnemies) {
-            if (spawnClock.getElapsedTime().asSeconds() > currentWave.spawnInterval) {
-                spawnEnemy(enemies);
+        case WaveState::Spawning:
+            updateEnemies(dt);
+            if (enemies.empty()) {
+                waveState = WaveState::WaitingForNextWave;
+                waveDelayClock.restart();
+                waveDelayDuration = 3.0f;
+                postMessage("Wave " + std::to_string(currentWaveIndex + 1) + " complete.");
             }
-        } else if (!waveComplete) {
-            postMessage("[WaveSpawner] Wave " + std::to_string(currentWaveIndex + 1) + " complete.\n");
-            waveComplete = true;
-        }
-    } else { // Legacy random spawner
-        if (spawnClock.getElapsedTime().asSeconds() > spawnInterval) {
-            float x = randomX();
-            enemies.push_back(std::make_unique<Enemy>(sf::Vector2f(x, -40.f)));
-            spawnClock.restart();
-        }
+            break;
+    
+        case WaveState::WaitingForNextWave:
+            if (waveDelayClock.getElapsedTime().asSeconds() >= waveDelayDuration) {
+                currentWaveIndex++;
+                waveState = WaveState::Spawning;
+                postMessage("Wave " + std::to_string(currentWaveIndex + 1) + " starting!");
+                spawnWave(currentWaveIndex);
+            }
+            break;
     }
 }
 
@@ -60,17 +70,35 @@ void EnemySpawner::startNextWave() {
         spawnClock.restart();
         postMessage("[WaveSpawner] Starting Wave " + std::to_string(currentWaveIndex + 1) + "\n");
     } else {
-        if (!spawnerEmpty) {
-            spawnerEmpty = true;
+        allWavesComplete = true;
+        if (!promptedAllWavesComplete) {
+            promptedAllWavesComplete = true;
             postMessage("[WaveSpawner] No more waves!\n");
         }
     }
+}
+bool EnemySpawner::isFirstWaveSpawned() const {
+    return firstWaveSpawned;
 }
 
 bool EnemySpawner::isWaveComplete() const {
     return waveComplete;
 }
 
+bool EnemySpawner::isAllWavesComplete() const {
+    return allWavesComplete;
+}
+
+//PRIVATE
+
 float EnemySpawner::randomX() {
     return static_cast<float>(std::rand() % static_cast<int>(screenWidth - 40)) + 20.f;
+}
+
+
+void EnemySpawner::spawnEnemy(std::vector<std::unique_ptr<Enemy>>& enemies) {
+    float x = randomX();
+    enemies.push_back(std::make_unique<Enemy>(sf::Vector2f(x, -40.f)));
+    enemiesSpawnedInWave++;
+    spawnClock.restart();
 }
