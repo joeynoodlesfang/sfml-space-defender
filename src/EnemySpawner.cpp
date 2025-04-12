@@ -11,14 +11,43 @@ EnemySpawner::EnemySpawner(float spawnInterval, unsigned int screenWidth)
     : spawnInterval(spawnInterval), screenWidth(screenWidth) {}
 
 EnemySpawner::EnemySpawner(unsigned int screenWidth)
-    : screenWidth(screenWidth)
+    : screenWidth(screenWidth), currentWaveIndex(-1), enemiesSpawnedInWave(0),
+      waveComplete(false), allWavesComplete(false), waveDelayDuration(0.f), waveState(WaveState::Idle) {
+    reset();
+}
+
+void EnemySpawner::reset() 
 {
-    waves.push_back(Wave{ 5, 2.0f });   // 5 enemies, 2s apart
+    currentWaveIndex = -1;
+    enemiesSpawnedInWave = 0;
+    waveComplete = false;
+    allWavesComplete = false;
+    spawnClock.restart();
+    waveDelayClock.restart();
+    waves.clear();
+
+    waves.push_back(Wave{ 5, 2.0f });
     waves.push_back(Wave{ 8, 1.5f });
     waves.push_back(Wave{ 12, 1.0f });
-    postMessage("[WaveSpawner] Starting Wave 1\n");
-    spawnClock.restart();
+
+    waveState = WaveState::Idle;
+
+    postMessage("[WaveSpawner] Waves reset. Ready to start.");
 }
+
+
+void EnemySpawner::startNextWave() 
+{
+    currentWaveIndex++;
+    enemiesSpawnedInWave = 0;
+    waveComplete = false;
+    waveState = WaveState::StartingWave;
+    spawnClock.restart();
+    waveDelayClock.restart();
+    waveDelayDuration = 3.0f;
+    postMessage("Wave " + std::to_string(currentWaveIndex + 1));
+}
+
 
 void EnemySpawner::update(std::vector<std::unique_ptr<Enemy>>& enemies) 
 {
@@ -77,22 +106,6 @@ WaveState EnemySpawner::getWaveState() const
     return waveState;
 }
 
-void EnemySpawner::startNextWave() 
-{
-    if (currentWaveIndex + 1 < waves.size()) {
-        currentWaveIndex++;
-        enemiesSpawnedInWave = 0;
-        waveComplete = false;
-        spawnClock.restart();
-        postMessage("[WaveSpawner] Starting Wave " + std::to_string(currentWaveIndex + 1) + "\n");
-    } else {
-        allWavesComplete = true;
-        if (!promptedAllWavesComplete) {
-            promptedAllWavesComplete = true;
-            postMessage("[WaveSpawner] No more waves!\n");
-        }
-    }
-}
 bool EnemySpawner::isFirstWaveSpawned() const {
     return firstWaveSpawned;
 }

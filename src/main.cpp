@@ -87,6 +87,7 @@ int main()
     sf::Clock waveDelayClock;
     float waveDelayDuration = 0.f;
     int currentWaveIndex = 0;
+    bool waitingForPlayerToStartWave = true;
 
 
     while (window.isOpen())
@@ -110,6 +111,15 @@ int main()
 
         // Handle enemy spawn
         //TODO: fix edge spawning (current player too big)
+
+        // Reset 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
+            bullets.clear();
+            enemies.clear();
+            spawner.reset();
+            waitingForPlayerToStartWave = true;
+        }
+        
         
         // Updates
         spawner.update(enemies);
@@ -117,12 +127,11 @@ int main()
         updateEntities(bullets, deltaTime);
         updateEntities(enemies, deltaTime);
         messageManager.update();
-        
-
+                
         // Spawn
-        if (!spawner.isFirstWaveSpawned() ||  \
-            (spawner.isWaveComplete() && !spawner.isAllWavesComplete())) {
+        if (waitingForPlayerToStartWave && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
             spawner.startNextWave();
+            waitingForPlayerToStartWave = false;
         }
 
         // Collision detection (bullets vs enemies)
