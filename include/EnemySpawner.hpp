@@ -12,8 +12,9 @@ struct Wave {
 
 enum class WaveState {
     Idle,
-    WaitingForNextWave,
-    Spawning
+    StartingWave,
+    Spawning,
+    EndingWave
 };
 
 class EnemySpawner {
@@ -21,6 +22,7 @@ public:
     EnemySpawner(unsigned int screenWidth);
     EnemySpawner(float spawnInterval, unsigned int screenWidth);    // legacy UNUSED
     void update(std::vector<std::unique_ptr<Enemy>>& enemies);
+    WaveState getWaveState() const;
     void startNextWave();
     bool isFirstWaveSpawned() const;
     bool isWaveComplete() const;
@@ -29,8 +31,8 @@ public:
 private:
     unsigned int screenWidth;
 
-    std::vector<Wave> waves;
-    int currentWaveIndex = 0;
+    std::vector<Wave> waves; // stores all wave data
+    int currentWaveIndex = 0; // current wave
     int enemiesSpawnedInWave = 0;
     bool firstWaveSpawned = false;
     bool waveComplete = false;
