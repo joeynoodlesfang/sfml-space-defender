@@ -51,25 +51,14 @@ void EnemySpawner::startNextWave()
 
 void EnemySpawner::update(std::vector<std::unique_ptr<Enemy>>& enemies) 
 {
-    if (currentWaveIndex >= waves.size()) {
-        return; // No more waves
-    }
-
-
-
     switch (waveState) {
         case WaveState::Idle:
-            if 
-            waveState = WaveState::StartingWave;
             break;
     
         case WaveState::StartingWave:
-            updateEnemies(delta);
-            if (enemies.empty()) {
-                waveState = WaveState::WaitingForNextWave;
-                waveDelayClock.restart();
-                waveDelayDuration = 3.0f;
-                postMessage("Wave " + std::to_string(currentWaveIndex + 1) + " complete.");
+            if (waveDelayClock.getElapsedTime().asSeconds() >= waveDelayDuration) {
+                waveState = WaveState::Spawning;
+                spawnClock.restart();
             }
             break;
     
