@@ -24,8 +24,9 @@ public:
     EnemySpawner(float spawnInterval, unsigned int screenWidth);    // legacy UNUSED
     
     void update(std::vector<std::unique_ptr<Enemy>>& enemies);
-    void startNextWave();
+    void startNextWave(); // legacy
     void reset();
+    void startSpawn();
     bool isWaveComplete() const;
     bool isAllWavesComplete() const;
     int getCurrentWaveIndex() const;
@@ -43,9 +44,13 @@ private:
     sf::Clock spawnClock;
     sf::Clock waveDelayClock;
     WaveState waveState = WaveState::Idle;
-
+    WaveState previousWaveState = WaveState::Idle;
+    
+    void EnemySpawner::handleStateEnter(WaveState state);
+    void EnemySpawner::onEnterIdle();
+    void EnemySpawner::onEnterStartingWave();
+    void EnemySpawner::onEnterSpawning();
+    void EnemySpawner::onEnterEndingWave();
     float randomX();
     void spawnEnemy(std::vector<std::unique_ptr<Enemy>>& enemies);
-    void spawnerPostMessage(const std::string& msg, int tagID); // allows spawn state machine to post singular message per state
-
 };
