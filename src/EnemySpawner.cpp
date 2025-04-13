@@ -47,8 +47,8 @@ void EnemySpawner::startSpawn()
     waves.push_back(Wave{ 8, 1.5f });
     waves.push_back(Wave{ 12, 1.0f });
     currentWaveIndex = -1;
+// TODO: Catch for if not at Idle state
     waveState = WaveState::StartingWave;
-
 }
 
 void EnemySpawner::update(std::vector<std::unique_ptr<Enemy>>& enemies) 
