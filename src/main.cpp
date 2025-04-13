@@ -86,7 +86,6 @@ int main()
     WaveState waveState = WaveState::Idle;
     sf::Clock waveDelayClock;
     float waveDelayDuration = 0.f;
-    int currentWaveIndex = 0;
     bool waitingForPlayerToStartWave = true;
 
 

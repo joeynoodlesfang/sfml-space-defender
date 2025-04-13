@@ -5,6 +5,7 @@
 #include <SFML/System/Clock.hpp>
 #include "Enemy.hpp"
 
+// put all wave information in this struct
 struct Wave {
     int totalEnemies;
     float spawnInterval; // seconds
@@ -45,5 +46,6 @@ private:
 
     float randomX();
     void spawnEnemy(std::vector<std::unique_ptr<Enemy>>& enemies);
+    void spawnerPostMessage(const std::string& msg, int tagID); // allows spawn state machine to post singular message per state
 
 };

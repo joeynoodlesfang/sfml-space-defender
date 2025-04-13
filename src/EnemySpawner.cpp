@@ -45,7 +45,6 @@ void EnemySpawner::startNextWave()
     spawnClock.restart();
     waveDelayClock.restart();
     waveDelayDuration = 3.0f;
-    postMessage("Wave " + std::to_string(currentWaveIndex + 1));
 }
 
 
@@ -56,6 +55,7 @@ void EnemySpawner::update(std::vector<std::unique_ptr<Enemy>>& enemies)
             break;
     
         case WaveState::StartingWave:
+            postMessage("Wave " + std::to_string(currentWaveIndex + 1));
             if (waveDelayClock.getElapsedTime().asSeconds() >= waveDelayDuration) {
                 waveState = WaveState::Spawning;
                 spawnClock.restart();
@@ -63,40 +63,31 @@ void EnemySpawner::update(std::vector<std::unique_ptr<Enemy>>& enemies)
             break;
     
         case WaveState::Spawning:
-            const Wave& currentWave = waves[currentWaveIndex];
-
-            if (enemiesSpawnedInWave < currentWave.totalEnemies) {
-                if (spawnClock.getElapsedTime().asSeconds() > currentWave.spawnInterval) {
+            if (enemiesSpawnedInWave < waves[currentWaveIndex].totalEnemies) {
+                if (spawnClock.getElapsedTime().asSeconds() > waves[currentWaveIndex].spawnInterval) {
                     spawnEnemy(enemies);
+                    spawnClock.restart();
                 }
-            } else if (!waveComplete) {
-                postMessage("[WaveSpawner] Wave " + std::to_string(currentWaveIndex + 1) + " complete.\n");
-                waveComplete = true;
-            }
-            
-            if (waveDelayClock.getElapsedTime().asSeconds() >= waveDelayDuration) {
-                currentWaveIndex++;
-                waveState = WaveState::Spawning;
-                postMessage("Wave " + std::to_string(currentWaveIndex + 1) + " starting!");
-                spawnWave(currentWaveIndex);
+            } else if (enemies.empty()) {
+                waveState = WaveState::EndingWave;
+                waveDelayClock.restart();
+                waveDelayDuration = 5.0f;
+                postMessage("Wave " + std::to_string(currentWaveIndex + 1) + " complete!");
             }
             break;
         
         case WaveState::EndingWave:
+            if (waveDelayClock.getElapsedTime().asSeconds() >= waveDelayDuration) {
+                waveState = WaveState::Idle;
+                if (currentWaveIndex + 1 >= waves.size()) {
+                    allWavesComplete = true;
+                }
+            }
             break;
         
         default:
             break;
     }
-}
-
-WaveState EnemySpawner::getWaveState() const
-{
-    return waveState;
-}
-
-bool EnemySpawner::isFirstWaveSpawned() const {
-    return firstWaveSpawned;
 }
 
 bool EnemySpawner::isWaveComplete() const {
@@ -107,12 +98,15 @@ bool EnemySpawner::isAllWavesComplete() const {
     return allWavesComplete;
 }
 
+int EnemySpawner::getCurrentWaveIndex() const {
+    return currentWaveIndex;
+}
+
 //PRIVATE
 
 float EnemySpawner::randomX() {
     return static_cast<float>(std::rand() % static_cast<int>(screenWidth - 40)) + 20.f;
 }
-
 
 void EnemySpawner::spawnEnemy(std::vector<std::unique_ptr<Enemy>>& enemies) {
     float x = randomX();
