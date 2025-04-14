@@ -2,6 +2,7 @@
 ## TODO
 ### Major Features and Critical Bugs
 <ol>
+  <li>Understand what current design patterns are in the code, and try to add observer in here<li>
   <li>Add health mechanic</li>
   <li>Add enemy touch / reach bottom mechanic</li>
   <li>Move Wave display text to below debug text</li>
