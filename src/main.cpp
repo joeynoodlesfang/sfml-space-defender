@@ -129,7 +129,7 @@ int main()
                 
         // Spawn
         if (waitingForPlayerToStartWave && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
-            spawner.startNextWave();
+            spawner.startSpawn();
             waitingForPlayerToStartWave = false;
         }
 

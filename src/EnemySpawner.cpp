@@ -27,7 +27,7 @@ void EnemySpawner::reset()
     waves.clear();
     waveState = WaveState::Idle;
 
-    postMessage("[WaveSpawner] Waves reset.");
+    postMessage("[WaveSpawner] Waves reset."); // TODO: add DEBUG MESSAGE in game
 }
 
 //LEGACY for author's minimal reference only, DO NOT USE
@@ -80,13 +80,19 @@ void EnemySpawner::update(std::vector<std::unique_ptr<Enemy>>& enemies)
         
         case WaveState::EndingWave:
             if (waveDelayClock.getElapsedTime().asSeconds() >= waveDelayDuration) {
-                waveState = WaveState::Idle;
                 if (currentWaveIndex + 1 >= waves.size()) {
-                    allWavesComplete = true;
+                    waveState = WaveState::EndingAllWaves;
+                } else {
+                    waveState = WaveState::StartingWave;
                 }
             }
             break;
         
+        case WaveState::EndingAllWaves:
+            if (waveDelayClock.getElapsedTime().asSeconds() >= waveDelayDuration) {
+                waveState = WaveState::Idle;
+            }
+            break;
         default:
             break;
     }
@@ -114,6 +120,7 @@ void EnemySpawner::handleStateEnter(WaveState state)
         case WaveState::StartingWave: onEnterStartingWave(); break;
         case WaveState::Spawning: onEnterSpawning(); break;
         case WaveState::EndingWave: onEnterEndingWave(); break;
+        case WaveState::EndingAllWaves: onEnterEndingAllWaves(); break;
         default: break;
     }
 }
@@ -128,18 +135,30 @@ void EnemySpawner::onEnterStartingWave()
     enemiesSpawnedInWave = 0;
     waveComplete = false;
     postMessage("Wave " + std::to_string(currentWaveIndex + 1));
+    waveDelayClock.restart();
+    waveDelayDuration = 5.0f;
 }
+
 void EnemySpawner::onEnterSpawning()
 {
     spawnClock.restart();
-
 }
+
 void EnemySpawner::onEnterEndingWave()
 {
     postMessage("Wave " + std::to_string(currentWaveIndex + 1) + " complete!");
     waveDelayClock.restart();
     waveDelayDuration = 5.0f;
 }
+
+void EnemySpawner::onEnterEndingAllWaves()
+{
+    allWavesComplete = true;
+    postMessage("All Waves Complete");
+    waveDelayClock.restart();
+    waveDelayDuration = 5.0f;
+}
+
 
 float EnemySpawner::randomX() {
     return static_cast<float>(std::rand() % static_cast<int>(screenWidth - 40)) + 20.f;

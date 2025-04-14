@@ -11,11 +11,13 @@ struct Wave {
     float spawnInterval; // seconds
 };
 
+// Spawner's update FSM
 enum class WaveState {
     Idle,
     StartingWave,
     Spawning,
-    EndingWave
+    EndingWave,
+    EndingAllWaves
 };
 
 class EnemySpawner {
@@ -46,11 +48,12 @@ private:
     WaveState waveState = WaveState::Idle;
     WaveState previousWaveState = WaveState::Idle;
     
-    void EnemySpawner::handleStateEnter(WaveState state);
-    void EnemySpawner::onEnterIdle();
-    void EnemySpawner::onEnterStartingWave();
-    void EnemySpawner::onEnterSpawning();
-    void EnemySpawner::onEnterEndingWave();
+    void handleStateEnter(WaveState state);
+    void onEnterIdle();
+    void onEnterStartingWave();
+    void onEnterSpawning();
+    void onEnterEndingWave();
+    void onEnterEndingAllWaves();
     float randomX();
     void spawnEnemy(std::vector<std::unique_ptr<Enemy>>& enemies);
 };
