@@ -23,10 +23,8 @@ enum class WaveState {
 class EnemySpawner {
 public:
     EnemySpawner(unsigned int screenWidth);
-    EnemySpawner(float spawnInterval, unsigned int screenWidth);    // legacy UNUSED
     
     void update(std::vector<std::unique_ptr<Enemy>>& enemies);
-    void startNextWave(); // legacy
     void reset();
     void startSpawn();
     bool isWaveComplete() const;
@@ -41,7 +39,6 @@ private:
     int enemiesSpawnedInWave = 0;
     bool waveComplete = false;
     bool allWavesComplete = false;
-    float spawnInterval = 0;    // legacy UNUSED
     float waveDelayDuration = 0.f;
     sf::Clock spawnClock;
     sf::Clock waveDelayClock;

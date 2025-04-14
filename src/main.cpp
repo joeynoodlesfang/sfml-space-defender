@@ -83,11 +83,7 @@ int main()
     sf::Clock clock;
     sf::Clock fireCooldownClock; 
 
-    WaveState waveState = WaveState::Idle;
-    sf::Clock waveDelayClock;
-    float waveDelayDuration = 0.f;
-    bool waitingForPlayerToStartWave = true;
-
+    bool waitingForPlayerToStartSpawningEnemies = true;
 
     while (window.isOpen())
     {
@@ -116,7 +112,7 @@ int main()
             bullets.clear();
             enemies.clear();
             spawner.reset();
-            waitingForPlayerToStartWave = true;
+            waitingForPlayerToStartSpawningEnemies = true;
         }
         
         
@@ -128,9 +124,9 @@ int main()
         messageManager.update();
                 
         // Spawn
-        if (waitingForPlayerToStartWave && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+        if (waitingForPlayerToStartSpawningEnemies && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
             spawner.startSpawn();
-            waitingForPlayerToStartWave = false;
+            waitingForPlayerToStartSpawningEnemies = false;
         }
 
         // Collision detection (bullets vs enemies)

@@ -6,10 +6,6 @@
 #include "Message.hpp"
 
 
-//Legacy UNUSED
-EnemySpawner::EnemySpawner(float spawnInterval, unsigned int screenWidth)
-    : spawnInterval(spawnInterval), screenWidth(screenWidth) {}
-
 EnemySpawner::EnemySpawner(unsigned int screenWidth)
     : screenWidth(screenWidth), currentWaveIndex(-1), enemiesSpawnedInWave(0),
       waveComplete(false), allWavesComplete(false), waveDelayDuration(0.f), waveState(WaveState::Idle) {
@@ -28,14 +24,6 @@ void EnemySpawner::reset()
     waveState = WaveState::Idle;
 
     postMessage("[WaveSpawner] Waves reset."); // TODO: add DEBUG MESSAGE in game
-}
-
-//LEGACY for author's minimal reference only, DO NOT USE
-void EnemySpawner::startNextWave() 
-{
-    currentWaveIndex++;
-    enemiesSpawnedInWave = 0;
-    waveComplete = false;
 }
 
 void EnemySpawner::startSpawn()
