@@ -1,9 +1,20 @@
 
 ## TODO
+### Major Features and Critical Bugs
 <ol>
-  <li>Wave end after last enemy of wave dead</li>
-  <li>Delay of 5 seconds after each wave before spawn</li>
+  <li>Add health mechanic</li>
+  <li>Add enemy touch / reach bottom mechanic</li>
+  <li>Move Wave display text to below debug text</li>
+  <li>Add basic sprites for player and enemy</li>
+  <li>Add background</li>
+  <li>Add sound</li>
+  <li>Add instructions for play and install</li>
+</ol>
+
+### Minor Features and Bugfixes
+<ol>
   <li>Reduce game width without changing screen width</li>
+  <li>Fix wave reset spam (potentially adding wave reset state to update)</li>
 </ol>
 
 
