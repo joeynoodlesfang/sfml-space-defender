@@ -14,6 +14,7 @@
 ### Minor Features and Bugfixes
 <ol>
   <li>Reduce game width without changing screen width</li>
+  <li>Reduce wait time after Wave Start Message 5->3s</li>
   <li>Fix wave reset spam (potentially adding wave reset state to update)</li>
 </ol>
 
