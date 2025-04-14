@@ -19,7 +19,7 @@
 
 #include <filesystem>
 
-#include "GameMessageManager.hpp"
+#include "Message.hpp"
 
 static const unsigned int defaultScreenWidth = 1200u;
 static const unsigned int defaultScreenHeight = 1000u;
@@ -83,6 +83,8 @@ int main()
     sf::Clock clock;
     sf::Clock fireCooldownClock; 
 
+    bool waitingForPlayerToStartSpawningEnemies = true;
+
     while (window.isOpen())
     {
         float deltaTime = clock.restart().asSeconds();
@@ -104,6 +106,15 @@ int main()
 
         // Handle enemy spawn
         //TODO: fix edge spawning (current player too big)
+
+        // Reset 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
+            bullets.clear();
+            enemies.clear();
+            spawner.reset();
+            waitingForPlayerToStartSpawningEnemies = true;
+        }
+        
         
         // Updates
         spawner.update(enemies);
@@ -111,10 +122,12 @@ int main()
         updateEntities(bullets, deltaTime);
         updateEntities(enemies, deltaTime);
         messageManager.update();
-        
-        if (enemies.empty() && spawner.isWaveComplete()) {
-            spawner.startNextWave();
-        }        
+                
+        // Spawn
+        if (waitingForPlayerToStartSpawningEnemies && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+            spawner.startSpawn();
+            waitingForPlayerToStartSpawningEnemies = false;
+        }
 
         // Collision detection (bullets vs enemies)
         for (auto& bullet : bullets) {
