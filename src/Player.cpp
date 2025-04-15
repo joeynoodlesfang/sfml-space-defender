@@ -43,6 +43,34 @@ void Player::update(float deltaTime) {
 
 void Player::draw(sf::RenderWindow& window) const {
     window.draw(shape);
+
+    // Health bar background (gray)
+    sf::RectangleShape healthBarBack;
+    healthBarBack.setSize({60.f, 8.f});
+    healthBarBack.setFillColor(sf::Color(100, 100, 100)); // dark gray
+    healthBarBack.setOrigin({healthBarBack.getSize().x / 2, healthBarBack.getSize().y / 2});
+    healthBarBack.setPosition({shape.getPosition().x, shape.getPosition().y - shape.getRadius() - 15.f});
+    window.draw(healthBarBack);
+
+    // Health bar foreground (green -> red based on hp)
+    sf::RectangleShape healthBarFront;
+    float healthPercent = static_cast<float>(health) / maxHealth;
+    healthBarFront.setSize({60.f * healthPercent, 8.f});
+    healthBarFront.setFillColor(sf::Color::Green);
+    healthBarFront.setOrigin({healthBarBack.getSize().x / 2, healthBarBack.getSize().y / 2});
+    healthBarFront.setPosition(healthBarBack.getPosition());
+    window.draw(healthBarFront);
+}
+
+void Player::markForDeletion(void) {
+    m_markedForDeletion = true;
+}
+
+void Player::takeDamage(int amount) {
+    health -= amount;
+    if (health <= 0) {
+        health = 0;
+    }
 }
 
 sf::FloatRect Player::getBounds() const {
@@ -53,10 +81,14 @@ sf::Vector2f Player::getPosition(void) const {
     return shape.getPosition();
 }
 
-void Player::markForDeletion(void) {
-    m_markedForDeletion = true;
-}
-
 bool Player::isMarkedForDeletion(void) const {
     return m_markedForDeletion;
+}
+
+int Player::getHealth() const {
+    return health;
+}
+
+bool Player::isDead() const {
+    return health <= 0;
 }
