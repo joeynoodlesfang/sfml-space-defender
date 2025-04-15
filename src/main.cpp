@@ -49,11 +49,13 @@ static bool setupDebugText(sf::Text& debugText)
 
 static void updateDebugText(sf::Text& debugText,
     const std::vector<std::unique_ptr<Bullet>>& bullets,
-    const std::vector<std::unique_ptr<Enemy>>& enemies)
+    const std::vector<std::unique_ptr<Enemy>>& enemies,
+    const int playerHealth)
 {
     debugText.setString(
         "Enemies: " + std::to_string(enemies.size()) +
-        "\nBullets: " + std::to_string(bullets.size()));
+        "\nBullets: " + std::to_string(bullets.size()) + 
+        "\nHealth: " + std::to_string(playerHealth));
 }
 
 int main()
@@ -144,8 +146,13 @@ int main()
         // Collision detection (enemies vs player)
         for (auto& enemy : enemies) {
             if (enemy->getBounds().findIntersection(player.getBounds())) {
-                std::cout << "Player hit! Game Over.\n";
-                window.close(); // TODO: proper gameover display
+                enemy->markForDeletion();
+                player.takeDamage(1);
+                std::cout << "Player Hit!";
+            
+                if (player.isDead()) {
+                    window.close();
+                }
             }
         }
 
@@ -157,7 +164,7 @@ int main()
                 return enemy->isOffScreen(config.getScreenHeight()) || enemy->isMarkedForDeletion();
             });
 
-        updateDebugText(debugText, bullets, enemies);
+        updateDebugText(debugText, bullets, enemies, player.getHealth());
         
         window.clear();
 
