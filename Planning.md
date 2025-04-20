@@ -25,8 +25,8 @@
 SFML-Space-Defender
 ├── src/                        
 │   ├── main.cpp                # Entry point
-│   ├── Game.cpp                # Game loop & state manager (yet to decide to keep or not)
-│   ├── Player.cpp              # Player spaceship
+│   ├── GameManager.cpp         # Handles Player interactions
+│   ├── Player.cpp              # Player spaceship object
 │   ├── Enemy.cpp               # Enemy class (Observer pattern)
 │   ├── EnemySpawner.cpp        # Handles waves and enemy spawning
 │   ├── Bullet.cpp              # Bullet mechanics
@@ -37,7 +37,7 @@ SFML-Space-Defender
 │   ├── (GameConfig.cpp)        # Singleton for game settings (currently all in hpp)
 │   ├── GameMessageManager.cpp  # Manages game messages
 └── include/                    # Header files
-│   ├── Game.h
+│   ├── GameManager.h
 │   ├── GameObject.hpp          # Abstract for all interacting game objects
 │   ├── ScreenObject.h          # Mixin for objects exiting/(entering) screen
 │   ├── Player.hpp

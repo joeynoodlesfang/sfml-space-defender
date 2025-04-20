@@ -6,7 +6,8 @@
 #include "GameConfig.hpp"
 #include "EntityUtils.hpp"
 
-#include "Player.hpp"
+#include "GameManager.hpp"
+#include "Player.hpp" // legacy, TODO remove
 
 #include "Bullet.hpp"
 #include <vector>
@@ -77,13 +78,12 @@ int main()
     window.setFramerateLimit(144);
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // Seed RNG
 
-    Player player;
-    std::vector<std::unique_ptr<Bullet>> bullets;
+    GameManager gameManager;
     std::vector<std::unique_ptr<Enemy>> enemies;
     EnemySpawner spawner(config.getScreenWidth());
 
     sf::Clock clock;
-    sf::Clock fireCooldownClock; 
+
 
     bool waitingForPlayerToStartSpawningEnemies = true;
 
@@ -97,14 +97,6 @@ int main()
                 window.close();
         }
     
-        // Handle bullet spawn
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-            if (fireCooldownClock.getElapsedTime().asSeconds() > 0.2f) {
-                sf::Vector2f spawnPos = player.getPosition();
-                bullets.push_back(std::make_unique<Bullet>(spawnPos));
-                fireCooldownClock.restart();
-            }
-        }
 
         // Handle enemy spawn
         //TODO: fix edge spawning (current player too big)
