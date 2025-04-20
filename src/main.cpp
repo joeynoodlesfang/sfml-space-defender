@@ -98,12 +98,10 @@ int main()
         }
     
 
-        // Handle enemy spawn
-        //TODO: fix edge spawning (current player too big)
+        gameManager.handleInput();
 
-        // Reset 
+        // Reset (TODO Move)
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
-            bullets.clear();
             enemies.clear();
             spawner.reset();
             waitingForPlayerToStartSpawningEnemies = true;
@@ -111,9 +109,9 @@ int main()
         
         
         // Updates
+        gameManager.update(deltaTime);
+        
         spawner.update(enemies);
-        player.update(deltaTime);
-        updateEntities(bullets, deltaTime);
         updateEntities(enemies, deltaTime);
         messageManager.update();
                 

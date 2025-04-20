@@ -18,7 +18,7 @@ public:
 private:
     Player player;
     std::vector<std::unique_ptr<Bullet>> bullets;
-    sf::Clock fireCooldownClock; 
+    sf::Clock bulletSpawnCDClock; 
     
     void spawnBullet();
     void updateBullets(float deltaTime);
