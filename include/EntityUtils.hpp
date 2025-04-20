@@ -6,9 +6,9 @@
 #include <SFML/Graphics.hpp>
 
 template<typename T>
-void updateEntities(std::vector<std::unique_ptr<T>>& entities, float dt) {
+void updateEntities(std::vector<std::unique_ptr<T>>& entities, float deltaTime) {
     for (auto& entity : entities) {
-        entity->update(dt);
+        entity->update(deltaTime);
     }
 }
 
