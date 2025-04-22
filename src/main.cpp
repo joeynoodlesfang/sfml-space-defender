@@ -100,6 +100,7 @@ int main()
 
         gameManager.handleInput();
 
+
         // Reset (TODO Move)
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
             enemies.clear();
@@ -109,8 +110,8 @@ int main()
         
         
         // Updates
-        gameManager.update(deltaTime);
-        
+
+        gameManager.update(deltaTime, enemies);
         spawner.update(enemies);
         updateEntities(enemies, deltaTime);
         messageManager.update();
@@ -119,18 +120,6 @@ int main()
         if (waitingForPlayerToStartSpawningEnemies && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
             spawner.startSpawn();
             waitingForPlayerToStartSpawningEnemies = false;
-        }
-
-        // Collision detection (bullets vs enemies)
-        for (auto& bullet : bullets) {
-            sf::FloatRect bulletBounds = bullet->getBounds();
-            for (auto& enemy : enemies) {
-                if (bulletBounds.findIntersection(enemy->getBounds())) {
-                    bullet->markForDeletion();
-                    enemy->markForDeletion();
-                    break;
-                }
-            }
         }
 
         // Collision detection (enemies vs player)

@@ -1,5 +1,6 @@
 #include "GameManager.hpp"
 #include "EntityUtils.hpp" //TODO should this be here or in hpp?
+#include "GameConfig.hpp"
 
 //TODO
 //Make sure GameManager is singleton as well (does that make sense)
@@ -15,10 +16,12 @@ void GameManager::handleInput()
     }
 }
 
-void GameManager::update(float deltaTime) 
+void GameManager::update(float deltaTime, std::vector<std::unique_ptr<Enemy>>& enemies) 
 {
     player.update(deltaTime);
     updateBullets(deltaTime);
+    handleBulletEnemyCollisions(enemies);
+    removeOffscreenBullets();
 }
 
 void GameManager::onEnemyEscaped()
@@ -26,6 +29,9 @@ void GameManager::onEnemyEscaped()
     //TODO Should not be health damage, but some count reduction
     player.takeDamage(10);
 }
+
+
+//PRIVATE
 
 void GameManager::spawnBullet()
 {
@@ -38,4 +44,27 @@ void GameManager::spawnBullet()
 void GameManager::updateBullets(float deltaTime)
 {
     updateEntities(bullets, deltaTime);
+}
+
+//TODO try removing the ampersand to make it pass by value
+void GameManager::handleBulletEnemyCollisions(std::vector<std::unique_ptr<Enemy>>& enemies)
+{
+    for (auto& bullet : bullets) {
+        sf::FloatRect bulletBounds = bullet->getBounds();
+        for (auto& enemy : enemies) {
+            if (bulletBounds.findIntersection(enemy->getBounds())) {
+                bullet->markForDeletion();
+                enemy->markForDeletion();
+                break;
+            }
+        }
+    }
+}
+
+void GameManager::removeOffscreenBullets()
+{
+    int screenHeight = GameConfig::get().getScreenHeight();
+    removeEntitiesIf(bullets, [&config](const std::unique_ptr<Bullet>& bullet) {
+        return bullet->isOffScreen(config.getScreenHeight()) || bullet->isMarkedForDeletion();
+    });
 }

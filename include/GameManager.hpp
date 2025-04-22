@@ -4,6 +4,8 @@
 // Handles all changes to game state
 /////////////////////////////////////////////
 
+#include <vector>
+#include <memory>
 
 #include "IEnemyObserver.hpp"
 #include "Player.hpp"
@@ -13,7 +15,7 @@
 class GameManager : public IEnemyObserver {
 public:
     void handleInput();
-    void update(float deltaTime);
+    void update(float deltaTime, std::vector<std::unique_ptr<Enemy>>& enemies);
     void onEnemyEscaped() override;
 private:
     Player player;
@@ -22,4 +24,6 @@ private:
     
     void spawnBullet();
     void updateBullets(float deltaTime);
+    void handleBulletEnemyCollisions(std::vector<std::unique_ptr<Enemy>>& enemies);
+    void removeOffscreenBullets();
 };
