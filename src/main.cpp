@@ -135,9 +135,6 @@ int main()
             }
         }
 
-        removeEntitiesIf(bullets, [&config](const std::unique_ptr<Bullet>& bullet) {
-                return bullet->isOffScreen(config.getScreenHeight()) || bullet->isMarkedForDeletion();
-            });
 
         removeEntitiesIf(enemies, [&config](const std::unique_ptr<Enemy>& enemy) {
                 return enemy->isOffScreen(config.getScreenHeight()) || enemy->isMarkedForDeletion();

@@ -14,6 +14,12 @@
 
 class GameManager : public IEnemyObserver {
 public:
+    // Singleton pattern
+    static GameManager& getInstance() {
+        static GameManager instance;
+        return instance;
+    }
+    
     void handleInput();
     void update(float deltaTime, std::vector<std::unique_ptr<Enemy>>& enemies);
     void onEnemyEscaped() override;
