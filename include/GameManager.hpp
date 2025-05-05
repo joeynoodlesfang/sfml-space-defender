@@ -20,8 +20,15 @@ public:
         return instance;
     }
     
+    #warning understand how this works!
+    GameManager(const GameManager&) = delete;
+    GameManager& operator=(const GameManager&) = delete;
+    GameManager(GameManager&&) = delete;
+    GameManager& operator=(GameManager&&) = delete;
+
+    void init(sf::Font& font);
     void handleInput();
-    void update(float deltaTime, std::vector<std::unique_ptr<Enemy>>& enemies);
+    void update(float deltaTime);
     void onEnemyEscaped() override;
 private:
     Player player;
