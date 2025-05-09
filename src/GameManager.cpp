@@ -6,6 +6,21 @@
 //Make sure GameManager is singleton as well (does that make sense)
 //Handling bullet collision
 
+GameManager::GameManager() 
+    : waitingForPlayerToStartSpawningEnemies(true)
+    , spawner(GameConfig::get().getScreenWidth())
+    , gameInitialized(false)
+{
+}
+
+void GameManager::init(sf::Font& font)
+{
+    if (!gameInitialized) {
+        setupDebugText(font);
+        gameInitialized = true;
+    }
+}
+
 void GameManager::handleInput()
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
