@@ -6,8 +6,7 @@
 //Make sure GameManager is singleton as well (does that make sense)
 //Handling bullet collision
 
-GameManager::GameManager() 
-    : waitingForPlayerToStartSpawningEnemies(true)
+GameManager::GameManager() : waitingForPlayerToStartSpawningEnemies(true)
     , spawner(GameConfig::get().getScreenWidth())
     , gameInitialized(false)
 {
@@ -82,4 +81,21 @@ void GameManager::removeOffscreenBullets()
     removeEntitiesIf(bullets, [&config](const std::unique_ptr<Bullet>& bullet) {
         return bullet->isOffScreen(config.getScreenHeight()) || bullet->isMarkedForDeletion();
     });
+}
+
+bool GameManager::setupDebugText(sf::Font& font)
+{
+    debugText.setFont(font);
+    debugText.setCharacterSize(16);
+    debugText.setFillColor(sf::Color::White);
+    debugText.setPosition({10.f, 10.f});
+    return true;
+}
+
+void GameManager::updateDebugText()
+{
+    debugText.setString(
+        "Enemies: " + std::to_string(enemies.size()) +
+        "\nBullets: " + std::to_string(bullets.size()) + 
+        "\nHealth: " + std::to_string(player.getHealth()));
 }
