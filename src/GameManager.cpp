@@ -83,6 +83,14 @@ void GameManager::removeOffscreenBullets()
     });
 }
 
+void GameManager::updateDebugText()
+{
+    debugText.setString(
+        "Enemies: " + std::to_string(enemies.size()) +
+        "\nBullets: " + std::to_string(bullets.size()) + 
+        "\nHealth: " + std::to_string(player.getHealth()));
+}
+
 bool GameManager::setupDebugText(sf::Font& font)
 {
     debugText.setFont(font);
@@ -90,12 +98,4 @@ bool GameManager::setupDebugText(sf::Font& font)
     debugText.setFillColor(sf::Color::White);
     debugText.setPosition({10.f, 10.f});
     return true;
-}
-
-void GameManager::updateDebugText()
-{
-    debugText.setString(
-        "Enemies: " + std::to_string(enemies.size()) +
-        "\nBullets: " + std::to_string(bullets.size()) + 
-        "\nHealth: " + std::to_string(player.getHealth()));
 }
