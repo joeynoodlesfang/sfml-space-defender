@@ -12,25 +12,6 @@
 #include "Enemy.hpp"
 #include "EnemySpawner.hpp"
 
-class IPlayerObserver {
-public:
-    virtual ~IPlayerObserver() = default;
-    virtual void onPlayerDamaged(int damage) = 0;
-    virtual void onPlayerDeath() = 0;
-};
-
-class IBulletObserver {
-public:
-    virtual ~IBulletObserver() = default;
-    virtual void onBulletFired() = 0;
-    virtual void onEnemyHit() = 0;
-};
-
-class IEnemyObserver {
-public:
-    virtual void onEnemyEscaped() = 0;
-    virtual ~IEnemyObserver() = default;
-};
 
 class GameManager {
 public:
