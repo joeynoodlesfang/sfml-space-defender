@@ -22,6 +22,7 @@ add_executable(SpaceDefender
     src/EnemySpawner.cpp
     src/GameMessageManager.cpp
     src/GameManager.cpp
+    src/EventDispatcher.cpp
 )
 target_compile_features(SpaceDefender PRIVATE cxx_std_17)
 target_link_libraries(SpaceDefender PRIVATE SFML::Graphics)
